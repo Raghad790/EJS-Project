@@ -1,0 +1,16 @@
+<%- include("partials/header.ejs") %>
+
+<div class="container my-5">
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title"><%= recipe.title %></h5>
+      <p class="small">Publish Date: <%= recipe.date %></p>
+      <p class="fs-6">Description: <%= recipe.description %></p>
+      <p class="fs-6">Ingredients: <%= recipe.ingredients %></p>
+      <p class="fs-6">Instructions:<%= recipe.instructions %></p>
+      <a href="/" class="btn btn-success mt-3">Back to Home</a>
+    </div>
+  </div>
+</div>
+
+<%- include("partials/footer.ejs") %>

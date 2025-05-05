@@ -1,0 +1,84 @@
+<%- include("partials/header.ejs") %>
+
+<div class="container my-5">
+  <h2 class="text-center mb-4 text-success">Edit Recipe</h2>
+
+  <form
+    action="/edit"
+    method="POST"
+    class="border rounded p-4 bg-light shadow-sm"
+  >
+    <input type="hidden" name="index" value="<%= locals.index %>" />
+    <div class="mb-3">
+      <label for="title" class="form-label fw-bold">Recipe Name</label>
+      <input
+        type="text"
+        name="title"
+        id="title"
+        class="form-control"
+        placeholder="e.g., Creamy Garlic Pasta"
+        value="<%= recipe.title %>"
+      />
+    </div>
+
+    <div class="mb-3">
+      <label for="description" class="form-label fw-bold"
+        >Short Description</label
+      >
+      <input
+        type="text"
+        name="description"
+        id="description"
+        class="form-control"
+        placeholder="A flavorful and creamy pasta recipe..."
+        value="<%= recipe.description %>"
+      />
+    </div>
+
+    <div class="mb-3">
+      <label for="ingredients" class="form-label fw-bold">Ingredients</label>
+      <textarea
+        name="ingredients"
+        id="ingredients"
+        class="form-control"
+        rows="4"
+        placeholder="List the ingredients here..."
+      >
+ <%= recipe.ingredients %></textarea
+      >
+    </div>
+
+    <div class="mb-3">
+      <label for="instructions" class="form-label fw-bold"
+        >Cooking Instructions</label
+      >
+      <textarea
+        name="instructions"
+        id="instructions"
+        class="form-control"
+        rows="6"
+        placeholder="Step-by-step cooking instructions..."
+      >
+<%= recipe.instructions %>
+      </textarea>
+    </div>
+
+    <div class="mb-3">
+      <label for="image" class="form-label fw-bold">Image URL</label>
+      <input
+        type="url"
+        name="image"
+        id="image"
+        class="form-control"
+        placeholder="Paste image URL here"
+        value="<%= recipe.image %>"
+      />
+    </div>
+
+    <div class="text-end">
+      <button type="submit" class="btn btn-success">Update Recipe</button>
+    </div>
+  </form>
+</div>
+
+<%- include("partials/footer.ejs") %>
