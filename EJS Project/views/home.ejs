@@ -10,49 +10,37 @@
   </div>
 </div>
 
-
 <div class="container my-5">
   <div class="row">
-    <% if (locals.recipes && locals.recipes.length > 0) { %>
-    <% for (let i = 0; i < locals.recipes.length; i++) { const recipe =
-   recipes[i]; %>
-
-    <div class="col-md-6 mb-4">
-      <div class="card shadow-sm">
+    <% recipes.forEach(recipe =>{ %>
+    <div class="col-12 col-sm-6 col-lg-4 mb-4">
+      <div class="card shadow-sm h-100">
+        <% if (recipe.image) { %>
+        <img
+          src="<%= recipe.image %>"
+          class="card-img-top img-dimension"
+          loading="lazy"
+        />
+        <% } %>
         <div class="card-body">
           <h5 class="card-title"><%= recipe.title %></h5>
-          <p class="small" >Publish Date: <%= recipe.date %></p>
-          <p class="fs-6" >Description: <%= recipe.description %></p>
+          <p class="small">
+            Publish Date: <%= new Date(recipe.date).toLocaleString()%>
+          </p>
+          <p class="fs-6">Description: <%= recipe.description %></p>
           <p class="fs-6">Ingredients: <%= recipe.ingredients %></p>
-          <p class="fs-6">Instructions:<%= recipe.instructions %></p>
+          <p class="fs-6">Instructions: <%= recipe.instructions %></p>
         </div>
-
-       <div class="d-flex card-footer d-flex justify-content-between">
-        <form action="/view" method="get" >
-          <input type="hidden" name="index" value="<%= i %>" />
-          <button type="submit"class="btn btn-success"/> View</button>
-        </form>
-     
-
-        <form action="/edit" method="get">
-          <input type="hidden" name="index" value="<%= i %>" />
-          <button type="submit" class="btn btn-custom">Edit</button>
-        </form>
-
-        <form action="/delete" method="post">
-          <input type="hidden" name="index" value="<%= i %>" />
-          <button type="submit" class="btn btn-custom " >Delete</button>
-        </form>
+        <div class="card-footer d-flex justify-content-between">
+          <a href="/view/<%= recipe.id %>" class="btn btn-success">View</a>
+          <a href="/edit/<%= recipe.id %>" class="btn btn-custom">Edit</a>
+          <a href="/api/recipes/delete/<%= recipe.id %>" class="btn btn-custom"
+            >Delete</a
+          >
+        </div>
       </div>
-      </div>
-
     </div>
-
-    <% } %>
-    <% } else{%>
-      <p class="text-center">No recipes found.</p>
-      <% } %>
-   
+    <% }); %>
   </div>
 </div>
 

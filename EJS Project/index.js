@@ -1,94 +1,99 @@
 import express from "express";
 import bodyParser from "body-parser";
-
-class Recipe {
-  constructor(id, title, description, ingredients, instructions, image, date) {
-    this.id = id;
-    this.title = title;
-    this.description = description;
-    this.ingredients = ingredients;
-    this.instructions = instructions;
-    this.image = image;
-    this.date = date;
-  }
-}
-
-let recipes = [];
+import axios from "axios";
 
 const app = express();
 const port = 3000;
+const api_url = "http://localhost:4000";
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
+app.use(bodyParser.json());
 
-app.get("/", (req, res) => {
-  res.render("home.ejs", { recipes: recipes });
+//Api call for the already created recipes
+app.get("/", async (req, res) => {
+  try {
+    const response = await axios.get(`${api_url}/recipes`);
+    //passing data to the home.ejs file
+    res.render("home.ejs", { recipes: response.data });
+  } catch (error) {
+    res.status(500).json({ error: error });
+  }
 });
-
+//create a new recipe file
 app.get("/create", (req, res) => {
   res.render("create.ejs");
 });
-
+//about page
 app.get("/about", (req, res) => {
   res.render("about.ejs");
 });
 
-app.post("/create", (req, res) => {
-  const id = recipes.length + 1;
-  const title = req.body.title;
-  const description = req.body.description;
-  const ingredients = req.body.ingredients;
-  const instructions = req.body.instructions;
-  const image = req.body.image;
-  const date = new Date().toLocaleString();
-
-  const newRecipe = new Recipe(
-    id,
-    title,
-    description,
-    ingredients,
-    instructions,
-    image,
-    date
-  );
-
-  recipes.push(newRecipe);
-  res.redirect("/");
+//edit recipe route
+app.get("/edit/:id", async (req, res) => {
+  //the requried id is passed in the url(as a parameter)
+  //and we are getting the recipe by id
+  const id = parseInt(req.params.id);
+  try {
+    const response = await axios.get(`${api_url}/recipes/${id}`);
+    res.render("update.ejs", { recipe: response.data });
+  } catch (error) {
+    res.status(500).json({ message: "Internal Server Error", error: error });
+  }
 });
 
-app.get("/view", (req, res) => {
-  const index = parseInt(req.query.index);
-  const recipe = recipes[index];
-  res.render("viewRecipe.ejs", { recipe: recipe });
+//Create a new recipe
+//this is the post request for creating a new recipe
+app.post("/api/recipes", async (req, res) => {
+  try {
+    const response = await axios.post(`${api_url}/recipes`, {
+      title: req.body.title,
+      description: req.body.description,
+      ingredients: req.body.ingredients,
+      instructions: req.body.instructions,
+      image: req.body.image,
+      date: new Date().toLocaleString(),
+    });
+    //send the body of the request to the api
+    res.redirect("/");
+  } catch (error) {
+    res.status(500).json({ message: "Internal Server Error", error: error });
+  }
 });
 
-app.get("/edit", (req, res) => {
-  const index = parseInt(req.query.index);
-  const recipe = recipes[index];
-  res.render("update.ejs", { recipe: recipe, index: index });
+//Edit recipe
+app.post("/api/recipes/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  try {
+    const response = await axios.patch(`${api_url}/recipes/${id}`, req.body);
+    res.redirect("/");
+  } catch (error) {
+    res.status(500).json({ message: "Internal Server Error", error: error });
+  }
 });
 
-app.post("/edit", (req, res) => {
-  const index = parseInt(req.body.index);
-  const originalId = recipes[index].id;
-  recipes[index] = {
-    id: originalId,
-    title: req.body.title,
-    description: req.body.description,
-    ingredients: req.body.ingredients,
-    instructions: req.body.instructions,
-    image: req.body.image,
-    date: new Date().toLocaleString(),
-  };
-  res.redirect("/");
+//Api call for  deleting the recipe
+app.get("/api/recipes/delete/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  try {
+    const response = await axios.delete(`${api_url}/recipes/${id}`);
+    res.redirect("/");
+  } catch (error) {
+    res.status(500).json({ message: "Internal Server Error", error: error });
+  }
 });
 
-app.post("/delete", (req, res) => {
-  const index = parseInt(req.body.index);
-  recipes.splice(index, 1);
-  res.redirect("/");
+// View Recipe
+app.get("/view/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  try {
+    const response = await axios.get(`${api_url}/recipes/${id}`);
+    res.render("viewRecipe.ejs", { recipe: response.data });
+  } catch (error) {
+    res.status(500).json({ message: "Internal Server Error", error: error });
+  }
 });
 
 app.listen(port, () => {
-  console.log("Server");
+  console.log("Server: localhost:3000");
 });
