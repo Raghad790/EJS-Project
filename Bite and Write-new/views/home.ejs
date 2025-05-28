@@ -1,0 +1,41 @@
+<%- include("partials/header.ejs") %>
+
+<div class="card text-bg-dark main-card rounded-0 border-0">
+  <img src="/images/bg.jpg" class="card-img bg-image" />
+  <div
+    class="card-img-overlay py-5 text-center d-flex flex-column justify-content-center align-items-center"
+  >
+    <h5 class="card-title display-3 fw-bold">Bite & Write</h5>
+    <p class="card-text lead">A blog for food lovers and kitchen creators.</p>
+  </div>
+</div>
+
+<div class="container my-5">
+  <div class="row">
+    <% recipes.forEach(recipe =>{ %>
+    <div class="col-12 col-sm-6 col-lg-4 mb-4">
+      <div class="card shadow-sm h-100">
+      
+        <div class="card-body">
+          <h5 class="card-title"><%= recipe.title %></h5>
+          <p class="small">
+            Publish Date: <%= new Date(recipe.date).toLocaleString()%>
+          </p>
+          <p class="fs-6">Description: <%= recipe.description %></p>
+          <p class="fs-6">Ingredients: <%= recipe.ingredients %></p>
+          <p class="fs-6">Instructions: <%= recipe.instructions %></p>
+        </div>
+        <div class="card-footer d-flex justify-content-between">
+          <a href="/view/<%= recipe.id %>" class="btn btn-success">View</a>
+          <a href="/edit/<%= recipe.id %>" class="btn btn-custom">Edit</a>
+          <form action="/delete/<%= recipe.id %>" method="POST" style="display:inline;">
+  <button type="submit" class="btn btn-custom">Delete</button>
+</form>
+        </div>
+      </div>
+    </div>
+    <% }); %>
+  </div>
+</div>
+
+<%- include("partials/footer.ejs") %>
