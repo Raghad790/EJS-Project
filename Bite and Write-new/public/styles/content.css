@@ -1,0 +1,15 @@
+.bg-image {
+  object-fit: cover;
+  height: 80vh;
+}
+.main-card {
+  height: 100%;
+}
+.about-img {
+  max-height: 400px;
+  object-fit: cover;
+}
+.btn-custom {
+  background-color: #bdad91 !important;
+  color: #fff !important;
+}
